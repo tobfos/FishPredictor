@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <script src="./js/socket.js"></script>
+
+  <title>42</title>
+  <link rel="stylesheet" type="text/css" href="./css/main.css">
+
+</head>
+<body>
+
+  <section id="main-section">
+    <section class="card-1-no-hover header-section">
+    </section>
+
+<div>
+  <span> <br />Days since start: </span>
+  <input type="text" placeholder="DAYS SINCE START" id='days'>
+  <span> <br />Quantity fed:</span>
+  <input type="text" placeholder="QTYFED" id='fed'> 
+  <span> <br />Month:</span> 
+  <input type="text" placeholder="MONTH" id='month'>
+  <span> <br />Average sea temperatur:</span>
+  <input type="text" placeholder="AVG SEA TEMP" id='avg_sea_temp'>
+  <input type="submit" value="Submit" onclick="myFunction('test')">
+</div>
+
+<div>
+  <p>MACHINE LEARNING RESPONSE:</p>
+  <span id="answer"> NaN </span>
+</div>
+
+</body>
+
+</html>
