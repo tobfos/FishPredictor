@@ -4,22 +4,58 @@ import numpy as np
 import pandas as pd
 from flask import request
 #from flask_cors import CORS
+def title_to_number(title):
+    title = title.lower()
+    if title == 'mr':
+        return 0
+    elif title == 'miss':
+        return 1
+    elif title == 'mrs':
+        return 2
+    elif title == 'dr':
+        return 3
+    elif title == 'annet':
+        return 4
+
+def sex_to_number(sex):
+    if sex.lower() == 'mann':
+        return 0
+    if sex.lower() == 'kvinne':
+        return 1
 
 app = Flask(__name__)
 #CORS(app)
+@app.route('/test', methods=['POST'])
+def test():
+	print(request.form['myTestKey'])
+	print('test is working')
+	response = jsonify({'prediction': "Tobias sin test funker vaaa"})
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
 
 @app.route('/predict', methods=['POST'])
 def predict():
-	#Input values: [DAYS SINCE START, QTYFED, MONTH, AVG_SEA_TEMP_CUMULATIVE]
-	#Outputs: AVERAGEWEIGHT
-	json_ = request.form['values']
-	values = np.array([[float(i) for i in json_[1:-1].split(',')]])
-	prediction = model.predict(values)
-	response = jsonify({'prediction': list(prediction)})
+	#parameters in form: class, sex, age, title, familySize
+	#Outputs: 0 - ded, 1 - survived
+	class_ = int(request.form['class'])
+	sex = request.form['sex']
+	sex = sex_to_number(sex)
+	age = float(request.form['age'])
+	title = request.form['title']
+	title = title_to_number(title)
+	familySize = 1 + float(request.form['familySize'])
+	isAlone = 0
+	if familySize == 1:
+		isAlone = 1
+	print([class_, sex, age, title, familySize, isAlone])
+	#order: pclass	sex	age	title	family_size	isAlone
+	prediction = model.predict_proba([[class_, sex, age, title, familySize, isAlone]])[0][1] #survival rate
+	print(prediction)
+	response = jsonify({'survivalScore': str(prediction)})
 	response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
 
 if __name__ == '__main__':
-     model = joblib.load('model_params_1.pkl')
+     model = joblib.load('randomForest_1.joblib')
      app.run(port=8080)
 
