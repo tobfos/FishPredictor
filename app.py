@@ -24,33 +24,28 @@ def sex_to_number(sex):
         return 1
 
 app = Flask(__name__)
-#CORS(app)
-@app.route('/test', methods=['POST'])
-def test():
-	print(request.form['myTestKey'])
-	print('test is working')
-	response = jsonify({'prediction': "Tobias sin test funker vaaa"})
-	response.headers.add('Access-Control-Allow-Origin', '*')
-	return response
 
 @app.route('/predict', methods=['POST'])
 def predict():
 	#parameters in form: class, sex, age, title, familySize
 	#Outputs: 0 - ded, 1 - survived
 	class_ = int(request.form['class'])
+
 	sex = request.form['sex']
 	sex = sex_to_number(sex)
+	
 	age = float(request.form['age'])
+
 	title = request.form['title']
 	title = title_to_number(title)
+
 	familySize = 1 + float(request.form['familySize'])
+
 	isAlone = 0
 	if familySize == 1:
 		isAlone = 1
-	print([class_, sex, age, title, familySize, isAlone])
-	#order: pclass	sex	age	title	family_size	isAlone
-	prediction = model.predict_proba([[class_, sex, age, title, familySize, isAlone]])[0][1] #survival rate
-	print(prediction)
+
+	prediction = model.predict_proba([[class_, sex, age, title, familySize, isAlone]])[0][1]
 	response = jsonify({'survivalScore': str(prediction)})
 	response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
