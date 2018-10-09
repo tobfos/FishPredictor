@@ -53,17 +53,18 @@ def process_dataset():
     df = pd.read_excel('titanic.xls')
     temp = df.name.apply(lambda x: x.split(',')[1].split('.')[0].strip())
     df['title'] = temp.apply(my_title_func)
-    df = df.loc[[not i for i in df.age.isna()], :]
+    df = df.loc[[not i for i in df.age.isnull()], :]
     df = df.pipe(get_family_size).pipe(create_alone)
+    df_org = df.copy()
     df["sex"] = df["sex"].apply(lambda x: sex_to_number(x))
     df["title"] = df["title"].apply(lambda x: title_to_number(x))
-    df_org = df.copy()
     df = df.drop(['survived', "home.dest", "body", "boat", "cabin",
                  "ticket", "fare", "name", "sibsp", "parch", "embarked"], axis=1)
     return df, df_org
 
 
 def get_closest_persons(observation, n_persons=1):
+
     return df_org.iloc[np.argsort(cdist(np.array([observation]), df))[0][:n_persons]]
 
 
@@ -125,5 +126,5 @@ def predict():
 if __name__ == '__main__':
      df, df_org = process_dataset()
      model = joblib.load('randomForest_1.joblib')
-     app.run(port=8080)
+     app.run(host= '0.0.0.0', port=8080)
 
