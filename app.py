@@ -7,7 +7,6 @@ from scipy.spatial.distance import cdist
 
 
 def title_to_number(title):
-    print(title)
     title = title.lower()
     if title == 'mr' or title == 'mr.':
         return 0
@@ -91,7 +90,6 @@ def predict():
     isAlone = 0
     if familySize == 1:
         isAlone = 1
-    print([class_, sex, age, title, familySize, isAlone])
     prediction = model.predict_proba([[class_, sex, age, title, familySize, isAlone]])[0][1]
     closest_person = get_closest_persons([class_, sex, age, title, familySize, isAlone], n_persons=2)
 
@@ -127,5 +125,5 @@ def predict():
 if __name__ == '__main__':
      df, df_org = process_dataset()
      model = joblib.load('randomForest_1.joblib')
-     app.run(host= '0.0.0.0', port=8080)
+     app.run(host= '0.0.0.0', port=8080, ssl_context='adhoc')
 
