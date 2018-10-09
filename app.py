@@ -7,16 +7,17 @@ from scipy.spatial.distance import cdist
 
 
 def title_to_number(title):
+    print(title)
     title = title.lower()
-    if title == 'mr':
+    if title == 'mr' or title == 'mr.':
         return 0
-    elif title == 'miss':
+    elif title == 'miss' or title == 'miss.':
         return 1
-    elif title == 'mrs':
+    elif title == 'mrs' or title == 'mrs.':
         return 2
-    elif title == 'dr':
+    elif title == 'dr' or title == 'dr.':
         return 3
-    elif title == 'annet':
+    elif title == 'annet' or title == 'other':
         return 4
 
 
@@ -90,7 +91,7 @@ def predict():
     isAlone = 0
     if familySize == 1:
         isAlone = 1
-
+    print([class_, sex, age, title, familySize, isAlone])
     prediction = model.predict_proba([[class_, sex, age, title, familySize, isAlone]])[0][1]
     closest_person = get_closest_persons([class_, sex, age, title, familySize, isAlone], n_persons=2)
 
